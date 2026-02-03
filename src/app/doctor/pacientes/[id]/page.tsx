@@ -2,7 +2,7 @@
  
  import React from 'react';
  import Link from 'next/link';
- import { notFound } from 'next/navigation';
+ import { useParams } from 'next/navigation';
  import { patients } from '@/data/patients';
  import { PatientHeader } from '@/components/report/PatientHeader';
  import { IFRMCard } from '@/components/dashboard/IFRMCard';
@@ -16,10 +16,25 @@
    ResponsiveContainer
  } from 'recharts';
  
- export default function PatientDetail({ params }: { params: { id: string } }) {
-   const p = patients.find(x => x.id === params.id);
+ export default function PatientDetail() {
+   const params = useParams() as { id?: string };
+   const p = patients.find(x => x.id === params?.id);
+ 
    if (!p) {
-     notFound();
+     return (
+       <div className="space-y-6">
+         <div className="flex items-center justify-between">
+           <h1 className="text-2xl font-bold text-gray-900">Paciente</h1>
+           <Link href="/doctor/pacientes" className="text-blue-600 text-sm font-semibold">
+             Volver a lista
+           </Link>
+         </div>
+         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+           <p className="text-sm text-gray-900 font-semibold">Paciente no encontrado</p>
+           <p className="text-xs text-gray-500 mt-1">Verifica el identificador y vuelve a intentarlo.</p>
+         </div>
+       </div>
+     );
    }
  
    const sessions = [
