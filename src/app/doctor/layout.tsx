@@ -23,7 +23,11 @@
            <ul className="space-y-1">
              {nav.map(item => {
                const Icon = item.icon;
-               const active = pathname === item.href || pathname.startsWith(item.href + '/');
+               const normalized = pathname.replace(/\/+$/, '');
+               const hrefNorm = item.href.replace(/\/+$/, '');
+               const active = hrefNorm === '/doctor'
+                 ? normalized === hrefNorm
+                 : (normalized === hrefNorm || normalized.startsWith(hrefNorm + '/'));
                return (
                  <li key={item.href}>
                    <Link
