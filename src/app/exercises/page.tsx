@@ -42,6 +42,7 @@ export default function Exercises() {
   const angleHistoryRef = useRef<number[]>([]);
   const lastDirectionRef = useRef<'up' | 'down' | null>(null);
   const repCountRef = useRef(0);
+  const lastTimestampRef = useRef<number>(0);
 
   function calculateWristAngle(
     landmarks: {
@@ -161,8 +162,14 @@ export default function Exercises() {
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
 
+      let ts = Math.floor(video.currentTime * 1000);
+      if (ts <= lastTimestampRef.current) {
+        ts = lastTimestampRef.current + 1;
+      }
+      lastTimestampRef.current = ts;
+
       const results: HandLandmarkerResult =
-        handLandmarkerRef.current.detectForVideo(video, video.currentTime * 1000);
+        handLandmarkerRef.current.detectForVideo(video, ts);
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
